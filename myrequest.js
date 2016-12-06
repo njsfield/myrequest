@@ -6,7 +6,7 @@ const url = require('url');
 // Standard methods
 const myRequest = (options, cb) => {
   if (typeof options === 'string') {
-    options = {url: options};
+    options = {url: options, method: 'get'};
   }
   let protocol = url.parse(options.url).protocol === 'https:' ? https : http;
   let httpOptions = {};
