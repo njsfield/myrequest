@@ -5,6 +5,9 @@ const url = require('url');
 
 // Standard methods
 const myRequest = (options, cb) => {
+  if (typeof options === 'string') {
+    options = {url: options};
+  }
   let protocol = url.parse(options.url).protocol === 'https:' ? https : http;
   let httpOptions = {};
   httpOptions.protocol = url.parse(options.url).protocol;
@@ -34,11 +37,8 @@ const myRequest = (options, cb) => {
 
 // Additional get/post methods
 myRequest.get = (options, cb) => {
-  if (typeof options === 'string') {
-    myRequest({url: options},cb);
-  } else {
-    myRequest(options,cb);
-  };
+  options.method = 'get';
+  myRequest(options,cb);
 };
 myRequest.post = (options, cb) => {
   options.method = 'post';
