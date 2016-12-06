@@ -48,13 +48,13 @@ test('It should return data on post request', (t) => {
   request(postOptions, (err, response, body)=> {
     t.ok(!err, 'Shouldnt throw an error');
     t.equals(JSON.parse(response).url, "http://httpbin.org/post", "should return url");
-    t.equals(JSON.parse(body), 'client_id=123455&client_secret=78987&redirect_uri=localhost%3A8080%2Fwelcome&code=12345', 'should return data');
+    t.equals(JSON.parse(body).data, 'client_id=123455&client_secret=78987&redirect_uri=localhost%3A8080%2Fwelcome&code=12345', 'should return data');
   });
   // Tests get method as method
   request.post(postOptions, (err, response, body)=> {
     t.ok(!err, 'Shouldnt throw an error');
     t.equals(JSON.parse(response).url, "http://httpbin.org/post", "should return url");
-    t.equals(JSON.parse(body), 'client_id=123455&client_secret=78987&redirect_uri=localhost%3A8080%2Fwelcome&code=12345', 'should return data');
+    t.equals(JSON.parse(body).data, 'client_id=123455&client_secret=78987&redirect_uri=localhost%3A8080%2Fwelcome&code=12345', 'should return data');
     t.end();
   });
 });

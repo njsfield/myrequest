@@ -5,19 +5,14 @@ const url = require('url');
 
 // Standard methods
 const myRequest = (options, cb) => {
-  let protocol = (options.protocol === 'https') ? https : http;
-  let httpOptions;
+  let protocol = url.parse(options.url).protocol === 'https:' ? https : http;
+  let httpOptions = {};
+  httpOptions.protocol = url.parse(options.url).protocol;
+  httpOptions.host     = url.parse(options.url).host;
+  httpOptions.path     = url.parse(options.url).path;
+  httpOptions.headers  = options.headers;
+  httpOptions.method   = options.method;
 
-  if (options instanceof Object) {
-    httpOptions = {};
-    httpOptions.protocol = url.parse(options.url).protocol;
-    httpOptions.host     = url.parse(options.url).host;
-    httpOptions.path     = url.parse(options.url).path;
-    httpOptions.headers  = options.headers;
-    httpOptions.method   = options.method;
-  } else {
-    httpOptions = options;
-  }
 
   let myReq = protocol.request(httpOptions, (res) => {
     let rawData = '';
@@ -25,7 +20,7 @@ const myRequest = (options, cb) => {
       rawData += chunk;
     });
     res.on('end', () => {
-      cb(null, rawData, JSON.stringify(JSON.parse(rawData).data));
+      cb(null, rawData, rawData);
     });
   });
 
@@ -39,8 +34,11 @@ const myRequest = (options, cb) => {
 
 // Additional get/post methods
 myRequest.get = (options, cb) => {
-  options.method = 'get';
-  myRequest(options,cb);
+  if (typeof options === 'string') {
+    myRequest({url: options},cb);
+  } else {
+    myRequest(options,cb);
+  };
 };
 myRequest.post = (options, cb) => {
   options.method = 'post';
